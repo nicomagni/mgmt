@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130314192721) do
+ActiveRecord::Schema.define(version: 20130510142950) do
 
   create_table "issues", force: true do |t|
     t.string   "status",          default: "not_started"
@@ -22,9 +22,10 @@ ActiveRecord::Schema.define(version: 20130314192721) do
     t.string   "github_status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "priority",        default: 0
   end
 
-  add_index "issues", ["project_id"], name: "index_issues_on_project_id"
+  add_index "issues", ["project_id"], name: "index_issues_on_project_id", using: :btree
 
   create_table "projects", force: true do |t|
     t.string   "organization"
@@ -33,7 +34,7 @@ ActiveRecord::Schema.define(version: 20130314192721) do
     t.datetime "updated_at"
   end
 
-  add_index "projects", ["organization", "name"], name: "index_projects_on_organization_and_name", unique: true
+  add_index "projects", ["organization", "name"], name: "index_projects_on_organization_and_name", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email"
@@ -54,7 +55,7 @@ ActiveRecord::Schema.define(version: 20130314192721) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
+  add_index "users", ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true, using: :btree
 
   create_table "worked_hours_entries", force: true do |t|
     t.decimal "amount"
@@ -63,8 +64,8 @@ ActiveRecord::Schema.define(version: 20130314192721) do
     t.date    "date"
   end
 
-  add_index "worked_hours_entries", ["date"], name: "index_worked_hours_entries_on_date"
-  add_index "worked_hours_entries", ["issue_id"], name: "index_worked_hours_entries_on_issue_id"
-  add_index "worked_hours_entries", ["user_id"], name: "index_worked_hours_entries_on_user_id"
+  add_index "worked_hours_entries", ["date"], name: "index_worked_hours_entries_on_date", using: :btree
+  add_index "worked_hours_entries", ["issue_id"], name: "index_worked_hours_entries_on_issue_id", using: :btree
+  add_index "worked_hours_entries", ["user_id"], name: "index_worked_hours_entries_on_user_id", using: :btree
 
 end
