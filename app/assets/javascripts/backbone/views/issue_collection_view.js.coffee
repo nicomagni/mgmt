@@ -88,8 +88,8 @@ class IssueCollectionView extends Backbone.View
 
   render: ->
     $('#issues').sortable
+      revert: true
       update: @generatePriorityDataJson
-      sort:@validateSorting
     
     for issue in @model
       issueView = new IssueView 
@@ -97,9 +97,6 @@ class IssueCollectionView extends Backbone.View
         el: @$("[data-number=#{issue.number}]")
         model: issue
       issueView.render()
-
-  validateSorting: =>
-    console.log()
 
   generatePriorityDataJson: =>
     issues = []
