@@ -8,7 +8,7 @@ Mgmt::Application.routes.draw do
 
   post 'github/notifications/:organization/:name/issues' => "github_notifications#issues", as: 'issues_github_notifications'
 
-  resources :projects, only: [:index, :show] do
+  resources :projects, only: [:index, :show, :update] do
     resources :issues, only: [:update] do
       member do
         post :log_worked_hours
