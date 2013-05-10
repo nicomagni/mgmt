@@ -1,6 +1,7 @@
 # Imports
 
 Issue = window.Mgmt.Models.Issue
+Project = window.Mgmt.Models.Project
 
 class IssueView extends Backbone.View
 
@@ -86,12 +87,35 @@ class IssueCollectionView extends Backbone.View
     @project = options.project
 
   render: ->
+    $('#issues').sortable
+      revert: true
+      update: @generatePriorityDataJson
+    
     for issue in @model
       issueView = new IssueView 
         project: @project
         el: @$("[data-number=#{issue.number}]")
         model: issue
       issueView.render()
+
+  generatePriorityDataJson: =>
+    issues = []
+
+    $('#issues').children().each (index, issue) =>
+      ans = {}
+      ans['id'] = $(issue).data("id")
+      ans['priority'] = index;
+      issues.push(ans)
+    $.ajax(
+      type: 'PATCH'
+      url: "/projects/#{@project}"
+      contentType: "application/json; charset=utf-8"
+      data: JSON.stringify(project: {issues_attributes:issues})
+      success: =>
+        console.log("OK")
+      error: (jqXHR, textStatus, errorThrown) =>
+        console.log("ERROR")
+    )
 
 # Exports
 

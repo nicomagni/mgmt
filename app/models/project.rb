@@ -19,7 +19,10 @@ class Project < ActiveRecord::Base
   # Instance Methods
 
   def open_issues
-    issues.where(github_status: :open)
+    opened_issues = issues.where(github_status: :open).order("priority ASC")
+    Issue::STATUS.flat_map do |status|
+      opened_issues.select { |issue| issue.status == status }
+    end
   end
 
 end
