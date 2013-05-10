@@ -8,6 +8,8 @@ module GithubProvisioner
       @project = project
     end
 
+    # Methods related to issues
+
     def provide_issues!
       self.issues_attributes = fetch_parsed_issues
       save!
@@ -20,7 +22,23 @@ module GithubProvisioner
       end
     end
 
+    # Methods related to milestones
+
+    def provide_milestones!
+      self.milestones_attributes = fetch_parsed_milestones
+      save!
+    end
+
+    def sync_milestones!
+      gh_milestones = fetch_parsed_milestones
+      transaction do
+        gh_milestones.each { |milestone| sync_milestone(milestone) }
+      end
+    end
+
     private
+
+      # Methods related to issues
 
       def fetch_issues(state)
         if state == :all
@@ -50,6 +68,34 @@ module GithubProvisioner
           ::Issue.create!(gh_issue.merge(project: @project))
         elsif issue.github_status != gh_issue[:github_status]
           issue.update_attributes!(github_status: gh_issue[:github_status])
+        end
+      end
+
+      # Methods related to milestones
+
+      def fetch_milestones
+        options = {
+          user: organization, 
+          repo: name, 
+        }
+        result = []
+        @github.issues.milestones.list(options).each_page { |page| result << page.to_a }
+        result.flatten
+      end
+
+      def fetch_parsed_milestones
+        fetch_milestones.map do |milestone|
+          GithubProvisioner::Milestone.extract_attributes(milestone)
+        end
+      end
+
+      def sync_milestone(gh_milestone)
+        puts "syncing milestone #{gh_milestone}"
+        milestone = self.milestones.where(number: gh_milestone[:number]).first
+        if milestone.nil?
+          ::Milestone.create!(gh_milestone.merge(project: @project))
+        elsif milestone.due_date != gh_milestone[:due_date]
+          milestone.update_attributes!(due_date: gh_milestone[:due_date])
         end
       end
 

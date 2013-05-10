@@ -13,12 +13,8 @@
           %span.js-issue-title= t('views.issues.loading.title')
       %div
         .item.pull-left
-          %select.status-switch.js-status
-            - Issue::STATUS.each do |status|
-              - if status == issue.status
-                %option{value: status, selected: 'selected'}= t("views.issues.status.#{status}")
-              - else
-                %option{value: status}= t("views.issues.status.#{status}")
+          -::Issue::ACTIONS.each do |action, status|
+            %a.js-status{href: '#', data_value: "#{status}"}= "#{action}"
         .item.pull-left
           %select.type-switch.js-type
             - Issue::TYPE.each do |type|

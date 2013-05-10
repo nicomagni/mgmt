@@ -8,6 +8,13 @@ class Issue < ActiveRecord::Base
     rejected
     delivered
   )
+  ACTIONS = {
+    "start" => "started",
+    "finish" => "finished",
+    "accept" => "accepted",
+    "reject" => "rejected",
+    "deliver" => "delivered" 
+  }
   TYPE = %w(
     chore
     feature

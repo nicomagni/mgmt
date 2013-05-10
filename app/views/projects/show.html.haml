@@ -1,5 +1,9 @@
 %h1#project.capitalize{'data-id' => @project.id,
-                      'data-name' => @project.name}= @project.name
+                      'data-name' => @project.name}= @project.name 
+                      %a{href: settings_project_url(@project)} settings
 %ul#issues
-  - @project.open_issues.each do |issue|
-    = render partial: 'projects/issue', locals: { issue: issue }
+  - if @project.current_milestone.nil? 
+    no current milestone
+  - else
+    - @project.current_milestone.issues.each do |issue|
+      = render partial: 'projects/issue', locals: { issue: issue }

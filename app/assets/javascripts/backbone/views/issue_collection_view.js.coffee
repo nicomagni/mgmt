@@ -8,7 +8,7 @@ class IssueView extends Backbone.View
   events:
     "change .js-eh"       : "updateEstimatedHours"
     "change .js-wh"       : "updateWorkedHours"
-    "change .js-status"   : "updateStatus"
+    "click  .js-status"    : "updateStatus"
     "change .js-type"     : "updateType"
 
   initialize: (options) ->
@@ -21,7 +21,7 @@ class IssueView extends Backbone.View
   # Event Handlers
 
   updateStatus: (event) ->
-    status = $(event.target).find("option:selected").val()
+    status = $(event.target).attr("data-value")
     @model.set('status', status)
     @model.save({}, error: @onStatusSaveError)
     @$el.removeClass("accepted not_started rejected finished delivered started")

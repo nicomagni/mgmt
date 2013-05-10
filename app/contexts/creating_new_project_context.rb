@@ -17,6 +17,7 @@ class CreatingNewProjectContext
     project = Project.create!(@project_attributes)
     provisioner = GithubProvisioner::Repository.new(@user.github, project)
     provisioner.provide_issues!
+    provisioner.provide_milestones!
     if @subscribe_to_events
       subscriber = GithubEventsSubscriber.new(project, @user.token)
       subscriber.subscribe!(:issues, @notifications_callback_url)
