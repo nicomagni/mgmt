@@ -86,6 +86,10 @@ class IssueCollectionView extends Backbone.View
     @project = options.project
 
   render: ->
+    $('#issues').sortable
+      update: ->
+        console.log('aefaefaef')
+    
     for issue in @model
       issueView = new IssueView 
         project: @project
